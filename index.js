@@ -9,7 +9,7 @@ const client = new Client({
   ]
 });
 
-const CHANNEL_ID = "1482849156333830224"; // حط ID ديال القناة
+const CHANNEL_ID = "1482849156333830224"; // حط ID ديال الروم هنا
 
 client.once("ready", async () => {
 
@@ -18,7 +18,7 @@ client.once("ready", async () => {
   const guild = client.guilds.cache.first();
   const channel = client.channels.cache.get(CHANNEL_ID);
 
-  function sendStats() {
+  function sendStats(){
 
     const members = guild.memberCount;
 
@@ -26,7 +26,7 @@ client.once("ready", async () => {
       m => m.presence && m.presence.status !== "offline"
     ).size;
 
-    const inVoice = guild.members.cache.filter(
+    const voice = guild.members.cache.filter(
       m => m.voice.channel
     ).size;
 
@@ -42,11 +42,11 @@ client.once("ready", async () => {
       .setDescription(`
 👥 **Members Count:** ${members}
 🟢 **Online Members:** ${online}
-🎧 **Members in Voice:** ${inVoice}
+🎧 **Members in Voice:** ${voice}
 🤖 **Bots Count:** ${bots}
 💎 **Server Boosts:** ${boosts}
       `)
-      .setFooter({ text: "Server Stats" })
+      .setFooter({ text: "Stay Active & Enjoy Your Time" })
       .setTimestamp();
 
     channel.send({ embeds: [embed] });
@@ -55,6 +55,7 @@ client.once("ready", async () => {
   sendStats();
 
   setInterval(sendStats, 600000); // كل 10 دقائق
+
 });
 
 client.login(process.env.TOKEN);
