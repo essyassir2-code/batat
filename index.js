@@ -46,4 +46,4 @@ function updateStats() {
 
 }
 
-client.login(process.env.MTQ4MjgzOTk0NjczNjY5NzQ4OA.Gbyv2J.8Rdh2x9x1oJ0nGb4wUDDYXioAq0RR7oIRsnYcY);
+client.login(process.env.TOKEN);
