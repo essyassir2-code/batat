@@ -5,15 +5,16 @@ const client = new Client({
     GatewayIntentBits.Guilds,
     GatewayIntentBits.GuildMembers,
     GatewayIntentBits.GuildPresences,
-    GatewayIntentBits.GuildVoiceStates
+    GatewayIntentBits.GuildVoiceStates,
+    GatewayIntentBits.GuildMessages,
+    GatewayIntentBits.MessageContent
   ]
 });
 
-const CHANNEL_ID = "1482849156333830224"; // حط ID ديال الروم هنا
+const CHANNEL_ID = "1482849156333830224";
 
-client.once("ready", async () => {
-
-  console.log("Stats bot online");
+client.once("ready", () => {
+  console.log("Bot is online");
 
   const guild = client.guilds.cache.first();
   const channel = client.channels.cache.get(CHANNEL_ID);
@@ -37,44 +38,48 @@ client.once("ready", async () => {
     const boosts = guild.premiumSubscriptionCount;
 
     const embed = new EmbedBuilder()
-      .setColor("#5865F2")
-      .setTitle(`${guild.name} ➜ Stats`)
-      .setDescription(`
-👥 **Members Count:** ${members}
-🟢 **Online Members:** ${online}
-🎧 **Members in Voice:** ${voice}
-🤖 **Bots Count:** ${bots}
-💎 **Server Boosts:** ${boosts}
-      `)
-      .setFooter({ text: "Stay Active & Enjoy Your Time" })
-      .setTimestamp();
+
+    .setColor("#5865F2")
+
+    .setTitle(`${guild.name} → Stats`)
+
+    .setDescription(`
+👥 **Members:** ${members}
+🟢 **Online:** ${online}
+🎤 **In Voice:** ${voice}
+🤖 **Bots:** ${bots}
+🚀 **Boosts:** ${boosts}
+`)
+
+    .setFooter({ text: "Stay Active & Enjoy Your Time" })
+    .setTimestamp();
 
     channel.send({ embeds: [embed] });
+
   }
 
   sendStats();
 
-  setInterval(sendStats, 600000); // كل 10 دقائق
+  setInterval(sendStats, 60000);
 
 });
 
-client.login(process.env.TOKEN);
 client.on("messageCreate", async (message) => {
 
-if(message.author.bot) return;
+  if(message.author.bot) return;
 
-if(message.content === "!donate"){
+  if(message.content === "!donate"){
 
-const embed = new EmbedBuilder()
+    const embed = new EmbedBuilder()
 
-.setAuthor({
-name: "PrimeManager",
-iconURL: client.user.displayAvatarURL()
-})
+    .setAuthor({
+      name: "PrimeManager",
+      iconURL: client.user.displayAvatarURL()
+    })
 
-.setTitle("💎 Server Donations")
+    .setTitle("💎 Server Donations")
 
-.setDescription(`
+    .setDescription(`
 ✨ **Premium Roles**
 Get your premium role.
 
@@ -87,16 +92,18 @@ Claim your private voice room.
 • BTC
 `)
 
-.setImage("https://media.tenor.com/m6oAJbC4YfAAAAAC/gojo.gif")
+    .setImage("https://media.tenor.com/m6oAJbC4YfAAAAAC/gojo.gif")
 
-.setColor("Purple")
+    .setColor("Purple")
 
-.setFooter({
-text: "PrimeManager • Donations"
-})
+    .setFooter({
+      text: "PrimeManager • Donations"
+    });
 
-message.channel.send({ embeds:[embed] });
+    message.channel.send({ embeds:[embed] });
 
-}
+  }
 
 });
+
+client.login(process.env.TOKEN);
