@@ -59,3 +59,44 @@ client.once("ready", async () => {
 });
 
 client.login(process.env.TOKEN);
+client.on("messageCreate", async (message) => {
+
+if(message.author.bot) return;
+
+if(message.content === "!donate"){
+
+const embed = new EmbedBuilder()
+
+.setAuthor({
+name: "PrimeManager",
+iconURL: client.user.displayAvatarURL()
+})
+
+.setTitle("💎 Server Donations")
+
+.setDescription(`
+✨ **Premium Roles**
+Get your premium role.
+
+✨ **Premium Rooms**
+Claim your private voice room.
+
+💳 Supported methods:
+• PayPal
+• Bank Transfer
+• BTC
+`)
+
+.setImage("https://media.tenor.com/m6oAJbC4YfAAAAAC/gojo.gif")
+
+.setColor("Purple")
+
+.setFooter({
+text: "PrimeManager • Donations"
+})
+
+message.channel.send({ embeds:[embed] });
+
+}
+
+});
