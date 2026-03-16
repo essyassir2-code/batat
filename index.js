@@ -1,29 +1,45 @@
-const { Client, GatewayIntentBits, EmbedBuilder, SlashCommandBuilder } = require("discord.js");
-const { REST, Routes } = require("discord.js");
+const { Client, GatewayIntentBits, SlashCommandBuilder, REST, Routes } = require("discord.js");
 
 const client = new Client({
   intents: [GatewayIntentBits.Guilds]
 });
 
+const TOKEN = process.env.TOKEN;
+
+const CLIENT_ID = "1482838946736697488";
+const GUILD_ID = "1480969773029527706";
+
 const commands = [
   new SlashCommandBuilder()
-  .setName("send")
-  .setDescription("Send announcement")
-  .addStringOption(option =>
-    option.setName("text")
-    .setDescription("write your announcement")
-    .setRequired(true)
-  )
+    .setName("send")
+    .setDescription("send announcement")
+    .addStringOption(option =>
+      option.setName("text")
+        .setDescription("write your announcement")
+        .setRequired(true)
+    )
 ].map(command => command.toJSON());
 
-const rest = new REST({ version: "10" }).setToken(process.env.TOKEN);
+const rest = new REST({ version: "10" }).setToken(TOKEN);
 
 (async () => {
-  await rest.put(
-    Routes.applicationCommands("1482839946736697488"),
-    { body: commands }
-  );
+  try {
+    console.log("registering command...");
+
+    await rest.put(
+      Routes.applicationGuildCommands(CLIENT_ID, GUILD_ID),
+      { body: commands }
+    );
+
+    console.log("command registered");
+  } catch (error) {
+    console.error(error);
+  }
 })();
+
+client.on("ready", () => {
+  console.log("Bot is online");
+});
 
 client.on("interactionCreate", async interaction => {
 
@@ -33,16 +49,12 @@ client.on("interactionCreate", async interaction => {
 
     const text = interaction.options.getString("text");
 
-    const embed = new EmbedBuilder()
-    .setDescription(text)
-    .setColor("Purple");
+    await interaction.reply({ content: "✅ announcement sent", ephemeral: true });
 
-    await interaction.reply({ content: "تم ارسال الاعلان", ephemeral: true });
-
-    interaction.channel.send({ embeds:[embed] });
+    interaction.channel.send(text);
 
   }
 
 });
 
-client.login(process.env.TOKEN);
+client.login(TOKEN);
